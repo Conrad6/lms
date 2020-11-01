@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Lms.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Lms.Data
 {
@@ -15,20 +14,20 @@ namespace Lms.Data
         {
         }
 
-        public virtual DbSet<BookBorrows> BookBorrows { get; set; }
+        public virtual DbSet<Borrow> BookBorrows { get; set; }
         public virtual DbSet<BookDetails> BookDetails { get; set; }
-        public virtual DbSet<BookTags> BookTags { get; set; }
-        public virtual DbSet<Books> Books { get; set; }
-        public virtual DbSet<BorrowCheckoutItems> BorrowCheckoutItems { get; set; }
-        public virtual DbSet<BorrowCheckouts> BorrowCheckouts { get; set; }
-        public virtual DbSet<CustomerSubscriptions> CustomerSubscriptions { get; set; }
-        public virtual DbSet<Customers> Customers { get; set; }
-        public virtual DbSet<PermissionPolicies> PermissionPolicies { get; set; }
-        public virtual DbSet<Permissions> Permissions { get; set; }
-        public virtual DbSet<SubscriptionPermissions> SubscriptionPermissions { get; set; }
-        public virtual DbSet<Subscriptions> Subscriptions { get; set; }
-        public virtual DbSet<Tags> Tags { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<BookTag> BookTags { get; set; }
+        public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<BorrowCheckoutItem> BorrowCheckoutItems { get; set; }
+        public virtual DbSet<BorrowCheckout> BorrowCheckouts { get; set; }
+        public virtual DbSet<CustomerSubscription> CustomerSubscriptions { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<PermissionPolicy> PermissionPolicies { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
+        public virtual DbSet<SubscriptionPermission> SubscriptionPermissions { get; set; }
+        public virtual DbSet<Subscription> Subscriptions { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,21 +40,21 @@ namespace Lms.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BookBorrows>(entity =>
+            modelBuilder.Entity<Borrow>(entity =>
             {
-                entity.HasKey(e => e.BorrowId)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
-                entity.HasIndex(e => e.RequestIssuer)
+                entity.HasIndex(e => e.RequestIssuerId)
                     .HasName("book_borrows_users_fk_idx");
 
-                entity.Property(e => e.BorrowId)
+                entity.Property(e => e.Id)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.RequestDate).HasDefaultValueSql("current_timestamp()");
 
-                entity.Property(e => e.RequestIssuer)
+                entity.Property(e => e.RequestIssuerId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -63,15 +62,15 @@ namespace Lms.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.RequestIssuerNavigation)
-                    .WithMany(p => p.BookBorrows)
-                    .HasForeignKey(d => d.RequestIssuer)
+                entity.HasOne(d => d.Issuer)
+                    .WithMany(p => p.IssuedBorrows)
+                    .HasForeignKey(d => d.RequestIssuerId)
                     .HasConstraintName("book_borrows_users_fk");
             });
 
             modelBuilder.Entity<BookDetails>(entity =>
             {
-                entity.HasIndex(e => e.Book)
+                entity.HasIndex(e => e.BookId)
                     .HasName("book_details_books_fk_idx");
 
                 entity.Property(e => e.Id)
@@ -79,7 +78,7 @@ namespace Lms.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Book)
+                entity.Property(e => e.BookId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -99,47 +98,47 @@ namespace Lms.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.BookNavigation)
+                entity.HasOne(d => d.Book)
                     .WithMany(p => p.BookDetails)
-                    .HasForeignKey(d => d.Book)
+                    .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_details_books_fk");
             });
 
-            modelBuilder.Entity<BookTags>(entity =>
+            modelBuilder.Entity<BookTag>(entity =>
             {
-                entity.HasIndex(e => e.Book)
+                entity.HasIndex(e => e.BookId)
                     .HasName("book_tags_books_fk_idx1");
 
-                entity.HasIndex(e => e.Tag)
+                entity.HasIndex(e => e.TagId)
                     .HasName("book_tags_books_fk_idx");
 
                 entity.Property(e => e.Id)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Book)
+                entity.Property(e => e.BookId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Tag)
+                entity.Property(e => e.TagId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.BookNavigation)
+                entity.HasOne(d => d.Book)
                     .WithMany(p => p.BookTags)
-                    .HasForeignKey(d => d.Book)
+                    .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_tags_books_fk");
 
-                entity.HasOne(d => d.TagNavigation)
+                entity.HasOne(d => d.Tag)
                     .WithMany(p => p.BookTags)
-                    .HasForeignKey(d => d.Tag)
+                    .HasForeignKey(d => d.TagId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_tags_tags_fk");
             });
 
-            modelBuilder.Entity<Books>(entity =>
+            modelBuilder.Entity<Book>(entity =>
             {
                 entity.HasIndex(e => e.AdderId)
                     .HasName("books_users_fk_adder_idx");
@@ -181,13 +180,13 @@ namespace Lms.Data
                 entity.Property(e => e.TotalCopies).HasDefaultValueSql("'1'");
 
                 entity.HasOne(d => d.Adder)
-                    .WithMany(p => p.Books)
+                    .WithMany(p => p.BooksAdded)
                     .HasForeignKey(d => d.AdderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("books_users_fk_adder");
             });
 
-            modelBuilder.Entity<BorrowCheckoutItems>(entity =>
+            modelBuilder.Entity<BorrowCheckoutItem>(entity =>
             {
                 entity.HasIndex(e => e.BookId)
                     .HasName("borrow_checkout_items_books_fk_idx");
@@ -218,18 +217,18 @@ namespace Lms.Data
                     .HasConstraintName("borrow_checkout_items_books_fk");
 
                 entity.HasOne(d => d.Checkout)
-                    .WithMany(p => p.BorrowCheckoutItems)
+                    .WithMany(p => p.CheckoutItems)
                     .HasForeignKey(d => d.CheckoutId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("borrow_checkout_items_borrow_checkouts_fk");
             });
 
-            modelBuilder.Entity<BorrowCheckouts>(entity =>
+            modelBuilder.Entity<BorrowCheckout>(entity =>
             {
                 entity.HasIndex(e => e.BorrowId)
                     .HasName("book_borrows_borrow_checkouts_fk_idx");
 
-                entity.HasIndex(e => e.CheckoutIssuer)
+                entity.HasIndex(e => e.CheckoutIssuerId)
                     .HasName("book_checkout_issuer_users_fk_idx");
 
                 entity.Property(e => e.Id)
@@ -240,7 +239,7 @@ namespace Lms.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.CheckoutIssuer)
+                entity.Property(e => e.CheckoutIssuerId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -251,31 +250,31 @@ namespace Lms.Data
                     .HasCollation("utf8_general_ci");
 
                 entity.HasOne(d => d.Borrow)
-                    .WithMany(p => p.BorrowCheckouts)
+                    .WithMany(p => p.Checkouts)
                     .HasForeignKey(d => d.BorrowId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_borrows_borrow_checkouts_fk");
 
-                entity.HasOne(d => d.CheckoutIssuerNavigation)
-                    .WithMany(p => p.BorrowCheckouts)
-                    .HasForeignKey(d => d.CheckoutIssuer)
+                entity.HasOne(d => d.CheckoutIssuer)
+                    .WithMany(p => p.BorrowCheckoutsIssued)
+                    .HasForeignKey(d => d.CheckoutIssuerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_checkout_issuer_users_fk");
             });
 
-            modelBuilder.Entity<CustomerSubscriptions>(entity =>
+            modelBuilder.Entity<CustomerSubscription>(entity =>
             {
-                entity.HasIndex(e => e.Customer)
+                entity.HasIndex(e => e.CustomerId)
                     .HasName("customer_subscriptions_customers_fk_idx");
 
-                entity.HasIndex(e => e.Subscription)
+                entity.HasIndex(e => e.SubscriptionId)
                     .HasName("customer_subscriptions_subscription_fk_idx");
 
                 entity.Property(e => e.Id)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Customer)
+                entity.Property(e => e.CustomerId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -289,24 +288,24 @@ namespace Lms.Data
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Subscription)
+                entity.Property(e => e.SubscriptionId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.CustomerNavigation)
+                entity.HasOne(d => d.Customer)
                     .WithMany(p => p.CustomerSubscriptions)
-                    .HasForeignKey(d => d.Customer)
+                    .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("customer_subscriptions_customers_fk");
 
-                entity.HasOne(d => d.SubscriptionNavigation)
+                entity.HasOne(d => d.Subscription)
                     .WithMany(p => p.CustomerSubscriptions)
-                    .HasForeignKey(d => d.Subscription)
+                    .HasForeignKey(d => d.SubscriptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("customer_subscriptions_subscription_fk");
             });
 
-            modelBuilder.Entity<Customers>(entity =>
+            modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasIndex(e => e.Email)
                     .HasName("email_UNIQUE")
@@ -341,15 +340,11 @@ namespace Lms.Data
                 entity.Property(e => e.Phone)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.Subscription)
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
             });
 
-            modelBuilder.Entity<PermissionPolicies>(entity =>
+            modelBuilder.Entity<PermissionPolicy>(entity =>
             {
-                entity.HasIndex(e => e.Permission)
+                entity.HasIndex(e => e.PermissionId)
                     .HasName("permission_policies_permissions_fk_idx");
 
                 entity.Property(e => e.Id)
@@ -362,18 +357,18 @@ namespace Lms.Data
 
                 entity.Property(e => e.CheckoutLimit).HasDefaultValueSql("'1'");
 
-                entity.Property(e => e.Permission)
+                entity.Property(e => e.PermissionId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.PermissionNavigation)
+                entity.HasOne(d => d.Permission)
                     .WithMany(p => p.PermissionPolicies)
-                    .HasForeignKey(d => d.Permission)
+                    .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("permission_policies_permissions_fk");
             });
 
-            modelBuilder.Entity<Permissions>(entity =>
+            modelBuilder.Entity<Permission>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedName)
                     .HasName("normalized_name_UNIQUE")
@@ -397,40 +392,40 @@ namespace Lms.Data
                     .HasCollation("utf8_general_ci");
             });
 
-            modelBuilder.Entity<SubscriptionPermissions>(entity =>
+            modelBuilder.Entity<SubscriptionPermission>(entity =>
             {
-                entity.HasIndex(e => e.Permission)
+                entity.HasIndex(e => e.PermissionId)
                     .HasName("subscription_permisions_permissions_fk_idx");
 
-                entity.HasIndex(e => e.Subscription)
+                entity.HasIndex(e => e.SubscriptionId)
                     .HasName("subscription_permissions_subscription_fk_idx");
 
                 entity.Property(e => e.Id)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Permission)
+                entity.Property(e => e.PermissionId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.Subscription)
+                entity.Property(e => e.SubscriptionId)
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.HasOne(d => d.PermissionNavigation)
+                entity.HasOne(d => d.Permission)
                     .WithMany(p => p.SubscriptionPermissions)
-                    .HasForeignKey(d => d.Permission)
+                    .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("subscription_permisions_permissions_fk");
 
-                entity.HasOne(d => d.SubscriptionNavigation)
+                entity.HasOne(d => d.Subscription)
                     .WithMany(p => p.SubscriptionPermissions)
-                    .HasForeignKey(d => d.Subscription)
+                    .HasForeignKey(d => d.SubscriptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("subscription_permissions_subscription_fk");
             });
 
-            modelBuilder.Entity<Subscriptions>(entity =>
+            modelBuilder.Entity<Subscription>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedName)
                     .HasName("normalized_name_UNIQUE")
@@ -453,7 +448,7 @@ namespace Lms.Data
                     .HasCollation("utf8_general_ci");
             });
 
-            modelBuilder.Entity<Tags>(entity =>
+            modelBuilder.Entity<Tag>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasCharSet("utf8")
@@ -464,7 +459,7 @@ namespace Lms.Data
                     .HasCollation("utf8_general_ci");
             });
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Id)
                     .HasName("id_UNIQUE")
