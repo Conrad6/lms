@@ -16,4 +16,8 @@
       <ProjectReference Include="..\Lms.Data\Lms.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lms.Data\Lms.Data.csproj" />
+    </ItemGroup>
+
 </Project>
