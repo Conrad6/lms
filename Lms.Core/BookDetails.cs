@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lms.Core
@@ -6,6 +7,11 @@ namespace Lms.Core
     [Table("book_details")]
     public partial class BookDetails
     {
+        public BookDetails()
+        {
+            Books = new HashSet<Book>();
+        }
+
         [Key]
         [Column("id", TypeName = "varchar(36)")]
         public string Id { get; set; }
@@ -30,12 +36,6 @@ namespace Lms.Core
         [Column("publish_year", TypeName = "year(4)")]
         public short? PublishYear { get; set; }
 
-        [Required]
-        [Column("book", TypeName = "varchar(36)")]
-        public string BookId { get; set; }
-
-        [ForeignKey(nameof(BookId))]
-        [InverseProperty(nameof(Core.Book.BookDetails))]
-        public virtual Book Book { get; set; }
+        [InverseProperty("BookDetails")] public virtual ICollection<Book> Books { get; }
     }
 }

@@ -16,12 +16,12 @@ namespace Lms.Core
         [Column("account_limit", TypeName = "int(11)")]
         public int? AccountLimit { get; set; }
 
-        [Required]
-        [Column("permission", TypeName = "varchar(36)")]
-        public string PermissionId { get; set; }
-
         [Column("checkout_limit", TypeName = "int(11)")]
         public int? CheckoutLimit { get; set; }
+
+        [Required]
+        [Column("permission_id", TypeName = "varchar(36)")]
+        public string PermissionId { get; set; }
 
         [ForeignKey(nameof(PermissionId))]
         [InverseProperty(nameof(Core.Permission.PermissionPolicies))]

@@ -4,22 +4,20 @@
     {
         protected bool Equals(BookDetails other)
         {
-            return Id == other.Id && BookId == other.BookId;
+            return Id == other.Id;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((BookDetails) obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((BookDetails) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (BookId != null ? BookId.GetHashCode() : 0);
-            }
+            return (Id != null ? Id.GetHashCode() : 0);
         }
     }
 }

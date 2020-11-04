@@ -10,7 +10,7 @@ namespace Lms.Core
     {
         public BorrowCheckout()
         {
-            CheckoutItems = new HashSet<BorrowCheckoutItem>();
+            BorrowCheckoutItems = new HashSet<BorrowCheckoutItem>();
         }
 
         [Key]
@@ -18,16 +18,8 @@ namespace Lms.Core
         public string Id { get; set; }
 
         [Required]
-        [Column("borrow_id", TypeName = "varchar(36)")]
-        public string BorrowId { get; set; }
-
-        [Required]
         [Column("status", TypeName = "varchar(45)")]
         public string Status { get; set; }
-
-        [Required]
-        [Column("checkout_issuer", TypeName = "varchar(36)")]
-        public string CheckoutIssuerId { get; set; }
 
         [Column("checkout_date", TypeName = "timestamp")]
         public DateTime? CheckoutDate { get; set; }
@@ -38,14 +30,30 @@ namespace Lms.Core
         [Column("return_date", TypeName = "timestamp")]
         public DateTime? ReturnDate { get; set; }
 
+        [Required]
+        [Column("borrow_id", TypeName = "varchar(36)")]
+        public string BorrowId { get; set; }
+
+        [Required]
+        [Column("issuer_id", TypeName = "varchar(36)")]
+        public string IssuerId { get; set; }
+
+        [Required]
+        [Column("stock_id", TypeName = "varchar(36)")]
+        public string StockId { get; set; }
+
         [ForeignKey(nameof(BorrowId))]
-        [InverseProperty(nameof(Core.Borrow.Checkouts))]
+        [InverseProperty(nameof(Core.Borrow.BorrowCheckouts))]
         public virtual Borrow Borrow { get; set; }
 
-        [ForeignKey(nameof(CheckoutIssuerId))]
-        [InverseProperty(nameof(User.BorrowCheckoutsIssued))]
-        public virtual User CheckoutIssuer { get; set; }
+        [ForeignKey(nameof(IssuerId))]
+        [InverseProperty(nameof(User.BorrowCheckouts))]
+        public virtual User Issuer { get; set; }
 
-        [InverseProperty("Checkout")] public virtual ICollection<BorrowCheckoutItem> CheckoutItems { get; }
+        [ForeignKey(nameof(StockId))]
+        [InverseProperty(nameof(Core.Stock.BorrowCheckouts))]
+        public virtual Stock Stock { get; set; }
+
+        [InverseProperty("BorrowCheckout")] public virtual ICollection<BorrowCheckoutItem> BorrowCheckoutItems { get; }
     }
 }

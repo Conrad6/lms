@@ -10,7 +10,7 @@ namespace Lms.Core
     {
         public Customer()
         {
-            CustomerSubscriptions = new HashSet<CustomerSubscription>();
+            Borrows = new HashSet<Borrow>();
         }
 
         [Key]
@@ -42,7 +42,22 @@ namespace Lms.Core
         [Column("nat_id", TypeName = "varchar(9)")]
         public string NatId { get; set; }
 
-        [InverseProperty("Customer")]
-        public virtual ICollection<CustomerSubscription> CustomerSubscriptions { get; }
+        [Required]
+        [Column("adder_id", TypeName = "varchar(36)")]
+        public string AdderId { get; set; }
+
+        [Required]
+        [Column("subscription_id", TypeName = "varchar(36)")]
+        public string SubscriptionId { get; set; }
+
+        [ForeignKey(nameof(AdderId))]
+        [InverseProperty(nameof(User.Customers))]
+        public virtual User Adder { get; set; }
+
+        [ForeignKey(nameof(SubscriptionId))]
+        [InverseProperty(nameof(CustomerSubscription.Customers))]
+        public virtual CustomerSubscription Subscription { get; set; }
+
+        [InverseProperty("Customer")] public virtual ICollection<Borrow> Borrows { get; }
     }
 }

@@ -4,13 +4,88 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Lms.Desktop.Pages"
+      xmlns:helpers="clr-namespace:Lms.Desktop.Helpers"
       mc:Ignorable="d"
-      Title="Login" 
+      Title="Login"
       Height="250"
       Width="300"
-      Name="Page">
+      Name="Page"
+      Loaded="LoginPage_OnLoaded"
+      DataContext="{Binding ElementName=Page, Path=ViewModel}">
+    <Page.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+            </Style>
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
     <DockPanel Width="{Binding ElementName=Page, Path=Width}"
                Height="{Binding ElementName=Page, Path=Height}">
+        <TextBlock Text="Log into Your Account"
+                   FontSize="15"
+                   FontWeight="Light"
+                   DockPanel.Dock="Top"
+                   HorizontalAlignment="Center"
+                   Margin="10"/>
         
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition Height=".3*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                <Label Content="Username"
+                       HorizontalAlignment="Center"
+                       />
+                <TextBox Text="{Binding Username, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                <Label Content="Password"
+                       HorizontalAlignment="Center"/>
+                <PasswordBox helpers:PasswordHelper.Attach="True"
+                             helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+            </StackPanel>
+            <Button Content="Login"
+                    HorizontalAlignment="Stretch"
+                    Padding="5"
+                    Command="{Binding LoginCommand, ValidatesOnDataErrors=True, NotifyOnTargetUpdated=True}"
+                    CommandParameter="{Binding}"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="10"
+                    VerticalAlignment="Center"/>
+        </Grid>
     </DockPanel>
 </Page>
