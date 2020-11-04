@@ -10,9 +10,9 @@ namespace Lms.Core
     {
         public Book()
         {
-            BookDetails = new HashSet<BookDetails>();
             BookTags = new HashSet<BookTag>();
             BorrowCheckoutItems = new HashSet<BorrowCheckoutItem>();
+            StockDeliveryItems = new HashSet<StockDeliveryItem>();
         }
 
         [Key]
@@ -26,7 +26,6 @@ namespace Lms.Core
         [Column("description", TypeName = "longtext")]
         public string Description { get; set; }
 
-        [Required]
         [Column("isbn", TypeName = "varchar(30)")]
         public string Isbn { get; set; }
 
@@ -39,12 +38,7 @@ namespace Lms.Core
         [Column("genre", TypeName = "varchar(200)")]
         public string Genre { get; set; }
 
-        [Required]
-        [Column("adder_id", TypeName = "varchar(36)")]
-        public string AdderId { get; set; }
-
-        [Column("available", TypeName = "bit(1)")]
-        public ulong? Available { get; set; }
+        [Column("available")] public bool? Available { get; set; }
 
         [Column("copies_available", TypeName = "int(11)")]
         public int CopiesAvailable { get; set; }
@@ -52,12 +46,24 @@ namespace Lms.Core
         [Column("total_copies", TypeName = "int(11)")]
         public int TotalCopies { get; set; }
 
+        [Required]
+        [Column("book_details_id", TypeName = "varchar(36)")]
+        public string BookDetailsId { get; set; }
+
+        [Required]
+        [Column("adder_id", TypeName = "varchar(36)")]
+        public string AdderId { get; set; }
+
         [ForeignKey(nameof(AdderId))]
-        [InverseProperty(nameof(User.BooksAdded))]
+        [InverseProperty(nameof(User.Books))]
         public virtual User Adder { get; set; }
 
-        [InverseProperty("Book")] public virtual ICollection<BookDetails> BookDetails { get; }
+        [ForeignKey(nameof(BookDetailsId))]
+        [InverseProperty("Books")]
+        public virtual BookDetails BookDetails { get; set; }
+
         [InverseProperty("Book")] public virtual ICollection<BookTag> BookTags { get; }
         [InverseProperty("Book")] public virtual ICollection<BorrowCheckoutItem> BorrowCheckoutItems { get; }
+        [InverseProperty("Book")] public virtual ICollection<StockDeliveryItem> StockDeliveryItems { get; }
     }
 }

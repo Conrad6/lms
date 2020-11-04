@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lms.Core
 {
-    [Table("book_borrows")]
+    [Table("borrows")]
     public partial class Borrow
     {
         public Borrow()
         {
-            Checkouts = new HashSet<BorrowCheckout>();
+            BorrowCheckouts = new HashSet<BorrowCheckout>();
         }
 
         [Key]
-        [Column("borrow_id", TypeName = "varchar(36)")]
+        [Column("id", TypeName = "varchar(36)")]
         public string Id { get; set; }
 
         [Column("request_date", TypeName = "timestamp")]
@@ -27,13 +27,22 @@ namespace Lms.Core
         [Column("status", TypeName = "varchar(45)")]
         public string Status { get; set; }
 
-        [Column("request_issuer", TypeName = "varchar(36)")]
-        public string RequestIssuerId { get; set; }
+        [Required]
+        [Column("issuer_id", TypeName = "varchar(36)")]
+        public string IssuerId { get; set; }
 
-        [ForeignKey(nameof(RequestIssuerId))]
-        [InverseProperty(nameof(User.IssuedBorrows))]
+        [Required]
+        [Column("customer_id", TypeName = "varchar(36)")]
+        public string CustomerId { get; set; }
+
+        [ForeignKey(nameof(CustomerId))]
+        [InverseProperty(nameof(Core.Customer.Borrows))]
+        public virtual Customer Customer { get; set; }
+
+        [ForeignKey(nameof(IssuerId))]
+        [InverseProperty(nameof(User.Borrows))]
         public virtual User Issuer { get; set; }
 
-        [InverseProperty("Borrow")] public virtual ICollection<BorrowCheckout> Checkouts { get; }
+        [InverseProperty("Borrow")] public virtual ICollection<BorrowCheckout> BorrowCheckouts { get; }
     }
 }

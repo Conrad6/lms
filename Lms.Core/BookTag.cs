@@ -11,11 +11,11 @@ namespace Lms.Core
         public string Id { get; set; }
 
         [Required]
-        [Column("book", TypeName = "varchar(36)")]
+        [Column("book_id", TypeName = "varchar(36)")]
         public string BookId { get; set; }
 
         [Required]
-        [Column("tag", TypeName = "varchar(36)")]
+        [Column("tag_id", TypeName = "varchar(36)")]
         public string TagId { get; set; }
 
         [ForeignKey(nameof(BookId))]

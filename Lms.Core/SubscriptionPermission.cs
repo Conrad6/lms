@@ -11,14 +11,14 @@ namespace Lms.Core
         public string Id { get; set; }
 
         [Required]
-        [Column("subscription", TypeName = "varchar(36)")]
+        [Column("subscription_id", TypeName = "varchar(36)")]
         public string SubscriptionId { get; set; }
 
         [Required]
-        [Column("permission", TypeName = "varchar(36)")]
+        [Column("permission_id", TypeName = "varchar(36)")]
         public string PermissionId { get; set; }
 
-        [ForeignKey(nameof(Core.Permission))]
+        [ForeignKey(nameof(PermissionId))]
         [InverseProperty(nameof(Core.Permission.SubscriptionPermissions))]
         public virtual Permission Permission { get; set; }
 

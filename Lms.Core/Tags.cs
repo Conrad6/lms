@@ -15,11 +15,11 @@ namespace Lms.Core
         [Key]
         [Column("id", TypeName = "varchar(36)")]
         public string Id { get; set; }
-
         [Required]
         [Column("name", TypeName = "varchar(45)")]
         public string Name { get; set; }
 
-        [InverseProperty("Tag")] public virtual ICollection<BookTag> BookTags { get; }
+        [InverseProperty("Tag")]
+        public virtual ICollection<BookTag> BookTags { get; }
     }
 }

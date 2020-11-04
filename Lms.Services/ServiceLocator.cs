@@ -1,5 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 
 namespace Lms.Services
 {
@@ -17,6 +20,17 @@ namespace Lms.Services
             _initialized = true;
             if(services is null) throw new ArgumentNullException(nameof(services));
             InitRegistry?.Invoke(services);
+            services.AddSingleton<PasswordEncoder>();
+            services.AddSingleton<UserClientService>();
+            services.AddSingleton<BookClientService>();
+            services.AddSingleton<StockClientService>();
+            services.AddLogging(builder =>
+            {
+                builder.AddFilter(level => level == LogLevel.Critical);
+                builder.AddFilter(level => level == LogLevel.Information);
+                builder.AddFilter(level => level == LogLevel.Error);
+                builder.AddFilter(level => level == LogLevel.Warning);
+            });
             _serviceProvider = services.BuildServiceProvider();
         }
 

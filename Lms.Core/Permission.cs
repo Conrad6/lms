@@ -29,8 +29,7 @@ namespace Lms.Core
         [Column("normalized_name", TypeName = "varchar(45)")]
         public string NormalizedName { get; set; }
 
-        [InverseProperty("Permission")]
-        public virtual ICollection<PermissionPolicy> PermissionPolicies { get; }
+        [InverseProperty("Permission")] public virtual ICollection<PermissionPolicy> PermissionPolicies { get; }
 
         [InverseProperty("Permission")]
         public virtual ICollection<SubscriptionPermission> SubscriptionPermissions { get; }

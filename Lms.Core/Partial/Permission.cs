@@ -11,15 +11,15 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((Permission) obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Permission) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Id != null ? Id.GetHashCode() : 0) * 397) ^
-                       (NormalizedName != null ? NormalizedName.GetHashCode() : 0);
+                return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (NormalizedName != null ? NormalizedName.GetHashCode() : 0);
             }
         }
     }
