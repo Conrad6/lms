@@ -19,6 +19,7 @@ namespace Lms.Desktop
             services.AddTransient<LoginPage>();
             services.AddTransient<BooksPage>();
             services.AddTransient<LoginViewModel>();
+            services.AddTransient<BooksPageViewModel>();
         }
     }
 }

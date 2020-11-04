@@ -2,6 +2,7 @@
 {
     public partial class User
     {
+        public string FullName => $"{FirstName} {LastName}";
         protected bool Equals(User other)
         {
             return Id == other.Id && Username == other.Username;

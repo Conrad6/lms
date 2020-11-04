@@ -37,5 +37,11 @@ namespace Lms.Services
             var query = from user in DbContext.Users where user.Username == username select user;
             return await query.SingleAsync();
         }
+
+        public async void LogoutUserAsync(string obj)
+        {
+            AppDomain.CurrentDomain.SetData(AppConstants.AuthenticatedUserUsernameKey, null);
+            await Task.CompletedTask;
+        }
     }
 }
