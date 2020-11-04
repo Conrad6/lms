@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace web.Shared
+namespace Web.Shared
 {
     public class WeatherForecast
     {

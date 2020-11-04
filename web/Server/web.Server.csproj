@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>Web.Server-0828E2B0-D7B6-4F2C-8C62-CE17C17E1F09</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,9 +10,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\web.Client.csproj" />
-    <ProjectReference Include="..\Shared\web.Shared.csproj" />
+    <ProjectReference Include="..\Client\Web.Client.csproj" />
+    <ProjectReference Include="..\Shared\Web.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
+  </ItemGroup>
 
 </Project>
